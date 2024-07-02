@@ -20,5 +20,6 @@ object CreateDataFrames {
     val df1 = dataSeq.toDF("id", "name")
     val df2 = spark.createDataFrame(dataRdd, mySchema)
     df1.show()
+    df2.show()
   }
 }
