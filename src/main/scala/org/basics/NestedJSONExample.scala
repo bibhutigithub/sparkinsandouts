@@ -36,11 +36,12 @@ object NestedJSONExample {
       .format("json")
       .schema(mySchema)
       .load("src/main/resources/datasets/employee_awards.json")
-    df.select(col("data.emp_id").as("emp_name")
-        , col("data.emp_name").as("employee_name")
-        , col("data.awards.award_type").as("award_type")
-        , col("data.awards.award_name").as("award_name")
-        , col("data.awards.year").as("year"))
-      .show()
+
+    val df_result = df.withColumn("awards",explode(col("data.awards")))
+      .select("data.emp_id"
+              ,"data.emp_name"
+              ,"awards.*"
+              )
+    df_result.show()
   }
 }
