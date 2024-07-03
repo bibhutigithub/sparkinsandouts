@@ -19,7 +19,7 @@ object DataFrameJSONSource {
         ,StructField("age",IntegerType)
       )
     )
-    val df = spark.read.format("json").schema(mySchema).load("src/main/resources/datasets/people.json")
+    val df = spark.read.format("json").schema(mySchema).load("src/main/resources/datasets/employee.json")
     df.show()
   }
 }
