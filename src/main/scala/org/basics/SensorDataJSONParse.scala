@@ -40,7 +40,7 @@ object SensorDataJSONParse {
 
     val df = spark.read
       .format("json")
-      .option("multiLine",true)
+      .option("multiLine",value = true)
       .schema(mySchema)
       .load("src/main/resources/datasets/sensors.json")
 
