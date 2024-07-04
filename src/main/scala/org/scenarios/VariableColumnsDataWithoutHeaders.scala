@@ -34,20 +34,27 @@ object VariableColumnsDataWithoutHeaders {
       final_df = final_df.withColumn("col_"+i, col("value")(i))
     }
 
-    val result_df = final_df.drop("value")
+    var result_df = final_df.drop("value")
 
     // This is one approach
     val all_columns_renamed_df = final_df
       .drop("value")
       .toDF(columnNameList:_*)
-    all_columns_renamed_df.show()
+
+    //all_columns_renamed_df.show()
 
     //Another approach
-    val final_result_df = columnNameList.foldLeft(result_df:DataFrame)(
+    var final_result_df = columnNameList.foldLeft(result_df:DataFrame)(
       (df,newColName) => {
         df.withColumnRenamed(df.columns(columnNameList.indexOf(newColName)),newColName)
       }
     )
-    final_result_df.show()
+    //final_result_df.show()
+    //One more approach
+    val old_columns = result_df.columns
+    for (i <-0 to old_columns.length-1){
+      result_df = result_df.withColumnRenamed(old_columns(i),columnNameList(i))
+    }
+    result_df.show()
   }
 }
