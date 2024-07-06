@@ -1,11 +1,11 @@
 package org.basics
 
 import org.apache.spark.sql.types._
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{Column, SparkSession}
 import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions._
 
-object RemoveDuplicateREcords {
+object RemoveDuplicateRecords {
   def main(args: Array[String]): Unit = {
     val spark = SparkSession
       .builder()
@@ -30,8 +30,19 @@ object RemoveDuplicateREcords {
                             .drop("row_id")
     //result_final_df.show()
 
-    // Through Group BY and Having Clause
-    //val
+    // Through Group BY
+    val colOperationsMap:Map[String,Column=>Column] = Map("id"-> count, "designation"->first, "updated_date"->first)
+    val colAliasMap = Map("id"->"colCount","designation"->"designation","updated_date"->"updated_date")
 
+    val groupByCols = Seq("id","name").map(col)
+    val aggregateCols = Seq("id","designation","updated_date")
+    val aggExpr = aggregateCols.map(colName=>colOperationsMap(colName)(col(colName)).alias(colAliasMap(colName)))
+
+    val result_group_by_df = df.orderBy(col("updated_date").desc)
+                               .groupBy(groupByCols:_*)
+                               .agg(aggExpr.head,aggExpr.tail:_*)
+                               .filter(col("colCount")>0)
+                               .drop("colCount")
+    result_group_by_df.show()
   }
 }
