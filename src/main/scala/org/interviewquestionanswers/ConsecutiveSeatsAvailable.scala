@@ -22,11 +22,11 @@ object ConsecutiveSeatsAvailable {
     //dataDF.show()
     val leadSpec = lead("free",1).over(Window.orderBy(col("seat_id")))
     val lagSpec = lag("free",1).over(Window.orderBy(col("seat_id")))
-    val result_df = dataDF.withColumn("lead_val",leadSpec)
+    val result_df = dataDF.orderBy(col("seat_id").asc)
+                          .withColumn("lead_val",leadSpec)
                           .withColumn("lag_val",lagSpec)
       .filter(col("free")===1 && (col("lead_val") === 1 || col("lag_val") === 1))
       .drop(dropColsSeq:_*)
-      .orderBy(col("seat_id").asc)
     result_df.show()
   }
 }
