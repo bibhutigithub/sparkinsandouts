@@ -19,7 +19,7 @@ object PartitionRecordsCount {
     val partitionCount = partitionedDf.rdd.getNumPartitions
     val result_df = partitionedDf.withColumn("partition_id",spark_partition_id())
       .groupBy("partition_id")
-      .agg(count(col("EMPNO")).as("empCount"))
+      .count()
     result_df.show()
   }
 }
