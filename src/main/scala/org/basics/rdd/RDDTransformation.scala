@@ -10,7 +10,7 @@ object RDDTransformation {
       .appName("SparkDemo")
       .getOrCreate()
 
-    val wordRdd = spark.sparkContext.textFile("src/main/resources/datasets/word_counts.txt")
+    val wordRdd = spark.sparkContext.textFile("src/main/resources/datasets/word_counts.txt", 3)
     val resultRdd = wordRdd.flatMap(line => line.split(" "))
       .map(word => (word, 1))
       .reduceByKey(_+_)
